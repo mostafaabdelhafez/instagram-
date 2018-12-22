@@ -57,6 +57,17 @@ class SignUpVC: UIViewController,UIImagePickerControllerDelegate,UINavigationCon
         Button.isEnabled = false
         return Button
     }()
+    let AlreadyHaveAccBtn:UIButton = {
+        
+        let button = UIButton(type: .system)
+        button.addTarget(self, action: #selector(HandehaveAccBtn), for: .touchUpInside)
+        let AttributedString = NSMutableAttributedString(string: "Already have an account? ", attributes: [NSAttributedStringKey.font:UIFont.boldSystemFont(ofSize: 14),NSAttributedStringKey.foregroundColor:UIColor.lightGray])
+        AttributedString.append(NSAttributedString(string: "Sign In", attributes: [NSAttributedStringKey.font:UIFont.systemFont(ofSize: 14)]))
+        button.setAttributedTitle(AttributedString, for: [])
+        // button.setTitle("Don't have an account? Sign up", for:.normal)
+        return button
+    }()
+    
     @objc func HandleSignUp(){
         guard let email = EmailTextField.text,email.characters.count > 0 else {return}
         guard let passward = PasswardTextField.text,email.characters.count > 0 else {return}
@@ -113,7 +124,10 @@ class SignUpVC: UIViewController,UIImagePickerControllerDelegate,UINavigationCon
                             
                             
                             print("user added with id ->",userid)
+                            guard let MainTapbarVC = UIApplication.shared.keyWindow?.rootViewController as? MainTabBarController else{return}
+                            MainTapbarVC.SetUpVC()
                             
+                            self.dismiss(animated: true, completion: nil)
                         })
                         
                         
@@ -188,18 +202,16 @@ class SignUpVC: UIViewController,UIImagePickerControllerDelegate,UINavigationCon
         PlusButton.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         PlusButton.topAnchor.constraint(equalTo: view.topAnchor, constant: 40).isActive = true
         SetupTextField()
-        
+        view.addSubview(AlreadyHaveAccBtn)
+        AlreadyHaveAccBtn.Anchor(Top: nil, Left: view.leftAnchor, Bottom: view.bottomAnchor, Right: view.rightAnchor, TopPadding: 0, LeftPadding: 0, BottomPadding: -10, RightPadding: 0, Width: 0, Height: 0)
         
             
 
         }
         
-        
-        
-        
-        
-        
-        
+    @objc func HandehaveAccBtn(){
+        navigationController?.popViewController(animated: true)
+    }
     
     fileprivate func SetupTextField(){
         let StackView = UIStackView(arrangedSubviews: [EmailTextField,UserNameTextField,PasswardTextField,SignUp])
